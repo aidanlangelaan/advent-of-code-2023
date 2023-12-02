@@ -3,9 +3,9 @@ using AdventOfCode.Core;
 
 Console.WriteLine("--- Advent of Code 2023 ---");
 
-var day01 = new Solver<Day01>(true);
-day01.SolveDayPart1();
-day01.SolveDayPart2();
+// var day01 = new Solver<Day01>(true);
+// day01.SolveDayPart1();
+// day01.SolveDayPart2();
 
 // var day02 = new Solver<Day02>(true);
 // day02.SolveDayPart1();
