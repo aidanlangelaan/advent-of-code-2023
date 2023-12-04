@@ -63,7 +63,6 @@ public class Day04 : Challenge<Day04>
         return cards.Sum(x => x.Value);
     }
     
-    
     private int GetWinCount(string card)
     {
         var numbers = card.Split(":")[1].Split("|");
@@ -71,21 +70,5 @@ public class Day04 : Challenge<Day04>
         var ownNumbers = numbers[1].Trim().Split(" ").Where(n => !string.IsNullOrEmpty(n)).Select(int.Parse).ToArray();
 
         return ownNumbers.Count(num => winningNumbers.Contains(num));
-    }
-    
-    private int CalculateScore(int winCount)
-    {
-        if (winCount == 0)
-        {
-            return 0;
-        }
-
-        var score = 1;
-        for (var i = 0; i < winCount - 1; i++)
-        {
-            score *= 2;
-        }
-
-        return score;
     }
 }
