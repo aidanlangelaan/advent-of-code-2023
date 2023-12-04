@@ -67,8 +67,7 @@ public class Day02 : Challenge<Day02>
             counts.Add(GetMinimalCubeCount(parts));
         }
         
-        Console.WriteLine(counts.Sum());
-        return 0;
+        return counts.Sum();
     }
     
     private int GetMinimalCubeCount(IReadOnlyList<string> parts)
