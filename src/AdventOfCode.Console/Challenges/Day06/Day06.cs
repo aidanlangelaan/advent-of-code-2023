@@ -58,19 +58,7 @@ public class Day06 : Challenge<Day06>
                 }
             }
 
-            // get max win
-            long maxSpeed = 0;
-            for (var i = race.Time; i > minSpeed; i--)
-            {
-                var speed = (long)Math.Pow(i, 1);
-                var distance = (race.Time - i) * speed;
-
-                if (distance > race.RecordDistance)
-                {
-                    maxSpeed = speed;
-                    break;
-                }
-            }
+            var maxSpeed = race.Time - minSpeed;
 
             winCount.Add(maxSpeed - minSpeed + 1);
         }
