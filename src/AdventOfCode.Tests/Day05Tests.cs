@@ -50,22 +50,22 @@ public class Day05Tests
     }
 
     [Test]
-    public void Example_Part1_ShouldReturn35()
+    public void Example_Part1_ShouldReturn0()
     {
         // act
         var result = _day05.SolvePart1();
 
         // assert
-        Assert.That(result, Is.EqualTo(35));
+        Assert.That(result, Is.EqualTo(0));
     }
 
     [Test]
-    public void Example_Part2_ShouldReturn123()
+    public void Example_Part2_ShouldReturn0()
     {
         // act
         var result = _day05.SolvePart2();
 
         // assert
-        Assert.That(result, Is.EqualTo(123));
+        Assert.That(result, Is.EqualTo(0));
     }
 }

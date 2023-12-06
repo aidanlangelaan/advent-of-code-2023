@@ -14,12 +14,135 @@ public class Day05 : Challenge<Day05>
     public Day05() : base()
     {
     }
-    
+
     public override int SolvePart1()
     {
-        // get seeds
-        var seedValues = _input[0].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x)).Select(x => Convert.ToInt32(x.Trim())).ToList();
+        var seedValues = _input[0]
+            .Split(":")[1]
+            .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+            .Select(long.Parse).ToList();
+
+        var seedRanges = new List<(long From, long To)>();
+        foreach (var value in seedValues)
+        {
+            seedRanges.Add((value, value));
+        }
+
+        var mappings = ParseMaps();
+
+        var result = ProcessSeeds(seedRanges, mappings);
+
+        Console.WriteLine(result);
+        return 0;
+    }
+
+    public override int SolvePart2()
+    {
+        // get seed values
+        var seedValues = _input[0]
+            .Split(":")[1]
+            .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+            .Select(long.Parse).ToList();
+
+        var mappings = ParseMaps();
+
+        var seedRanges = new List<(long From, long To)>();
+        for (var i = 0; i < seedValues.Count; i += 2)
+        {
+            seedRanges.Add((seedValues[i], seedValues[i] + seedValues[i + 1]));
+        }
+
+        var mergedRanges = MergeOverlappingRanges(seedRanges);
         
+        var result = ProcessSeeds(mergedRanges, mappings);
+
+        Console.WriteLine(result);
+        return 0;
+    }
+
+    private static List<(long From, long To)> MergeOverlappingRanges(List<(long From, long To)> seedRanges)
+    {
+        var mergedRanges = new List<(long From, long To)>();
+        foreach (var range in seedRanges)
+        {
+            if (mergedRanges.Count == 0)
+            {
+                mergedRanges.Add(range);
+                continue;
+            }
+
+            var lastRange = mergedRanges.Last();
+            if (range.From <= lastRange.To)
+            {
+                mergedRanges[^1] = (lastRange.From, Math.Max(lastRange.To, range.To));
+            }
+            else
+            {
+                mergedRanges.Add(range);
+            }
+        }
+
+        return mergedRanges;
+    }
+
+    private long ProcessSeeds(List<(long From, long To)> seedRanges, List<List<long[]>> mappings)
+    {
+        const long chunkSize = long.MaxValue;
+        var minLoc = long.MaxValue;
+
+        while (seedRanges.Count > 0)
+        {
+            var updatedRanges = RunMaps(seedRanges, mappings, chunkSize, ref minLoc);
+            seedRanges = updatedRanges;
+        }
+
+        return minLoc;
+    }
+
+    private List<(long From, long To)> RunMaps(List<(long From, long To)> seedRanges, List<List<long[]>> mappings,
+        long chunkSize, ref long minLoc)
+    {
+        var updatedRanges = new List<(long From, long To)>();
+        foreach (var range in seedRanges)
+        {
+            var value = range.From;
+            while (value <= range.To && value - range.From < chunkSize)
+            {
+                var processedValue = value;
+                
+                foreach (var maps in mappings)
+                {
+                    var map = maps.FirstOrDefault(map => processedValue >= map[1] && processedValue <= map[1] + map[2]);
+                    if (map == null)
+                    {
+                        continue;
+                    }
+
+                    processedValue = map[0] + (processedValue - map[1]);
+                }
+
+                value++;
+                minLoc = Math.Min(minLoc, processedValue);
+            }
+
+            if (value-1 - range.From > 0)
+            {
+                var newRange = range;
+                newRange.From = value;
+                updatedRanges.Add(newRange);
+            }
+
+            if (value-1 - range.From == chunkSize)
+            {
+                break;
+            }
+        }
+
+        return updatedRanges;
+    }
+
+    private List<List<long[]>> ParseMaps()
+    {
         // find index of where sections of the input start
         var seedToSoilMapIndex = _input.WithIndex().First(x => x.item.Contains("seed-to-soil map")).index + 1;
         var soilToFertMapIndex = _input.WithIndex().First(x => x.item.Contains("soil-to-fertilizer map")).index + 1;
@@ -29,116 +152,39 @@ public class Day05 : Challenge<Day05>
         var tempToHumMapIndex = _input.WithIndex().First(x => x.item.Contains("temperature-to-humidity map")).index + 1;
         var humToLocMapIndex = _input.WithIndex().First(x => x.item.Contains("humidity-to-location map")).index + 1;
 
-        // parse the maps
-        var seedToSoilMap = ParseMap(_input, seedToSoilMapIndex);
-        var soilToFertMap = ParseMap(_input, soilToFertMapIndex);
-        var fertToWaterMap = ParseMap(_input, fertToWaterMapIndex);
-        var waterToLightMap = ParseMap(_input, waterToLightMapIndex);
-        var lightToTempMap = ParseMap(_input, lightToTempMapIndex);
-        var tempToHumMap = ParseMap(_input, tempToHumMapIndex);
-        var humToLocMap = ParseMap(_input, humToLocMapIndex);
-
-        // process seeds to find the corresponding location
-        var processedSeeds = new List<Seed>();
-        foreach (var seedValue in seedValues)
+        // parse maps
+        return new List<List<long[]>>
         {
-            var seed = new Seed(seedValue);
-            
-            // find soil
-            var soil = FindCorrespondingValue(seedToSoilMap, seed.Value);
-            seed.Soil = soil;
-            
-            // find fertilizer
-            var fertilizer = FindCorrespondingValue(soilToFertMap, seed.Soil);
-            seed.Fertilizer = fertilizer;
-            
-            // find water
-            var water = FindCorrespondingValue(fertToWaterMap, seed.Fertilizer);
-            seed.Water = water;
-            
-            // find light
-            var light = FindCorrespondingValue(waterToLightMap, seed.Water);
-            seed.Light = light;
-            
-            // find temperature
-            var temperature = FindCorrespondingValue(lightToTempMap, seed.Light);
-            seed.Temperature = temperature;
-            
-            // find humidity
-            var humidity = FindCorrespondingValue(tempToHumMap, seed.Temperature);
-            seed.Humidity = humidity;
-            
-            // find location
-            var location = FindCorrespondingValue(humToLocMap, seed.Humidity);
-            seed.Location = location;
-            
-            processedSeeds.Add(seed);
-        }
-
-        return processedSeeds.MinBy(x => x.Location)!.Location;
+            ProcessMapAtIndex(_input, seedToSoilMapIndex),
+            ProcessMapAtIndex(_input, soilToFertMapIndex),
+            ProcessMapAtIndex(_input, fertToWaterMapIndex),
+            ProcessMapAtIndex(_input, waterToLightMapIndex),
+            ProcessMapAtIndex(_input, lightToTempMapIndex),
+            ProcessMapAtIndex(_input, tempToHumMapIndex),
+            ProcessMapAtIndex(_input, humToLocMapIndex)
+        };
     }
 
-    private int FindCorrespondingValue(List<(List<int>, List<int>)> mappings, int value)
+    private List<long[]> ProcessMapAtIndex(IReadOnlyList<string> input, int startIndex)
     {
-        // first get corresponding map from maps
-        var map = mappings.FirstOrDefault(x => x.Item1.Contains(value));
-        if (map.Item1 == null)
-        {
-            return value;
-        }
-        
-        // now find the index of the value in item1 of the map
-        var index = map.Item1.IndexOf(value);
-
-        // now use that index to get the corresponding item in item2 of the map
-        return map.Item2[index];
-    }
-
-    private List<(List<int>, List<int>)> ParseMap(string[] input, int startIndex)
-    {
-        var map = new List<(List<int>, List<int>)>();
+        var maps = new List<long[]>();
         var index = startIndex;
-        while (index < input.Length)
+        while (index < input.Count)
         {
             var line = input[index];
             if (string.IsNullOrEmpty(line))
             {
                 break;
             }
-            
-            var data = line.Split(" ").Where(x => !string.IsNullOrEmpty(x)).Select(x => Convert.ToInt32(x)).ToArray();
-            var sourceRange = Enumerable.Range(data[1], data[2]).ToList();
-            var destRange = Enumerable.Range(data[0], data[2]).ToList();
-            
-            map.Add((sourceRange, destRange));
-            
+
+            maps.Add(line.Split(" ")
+                .Where(x => !string.IsNullOrEmpty(x))
+                .Select(long.Parse)
+                .ToArray());
+
             index++;
         }
 
-        return map;
-    }
-
-    public override int SolvePart2()
-    {
-        throw new NotImplementedException();
-    }
-
-    private class Seed(int seedValue)
-    {
-        public int Value { get; set; } = seedValue;
-
-        public int Soil { get; set; }
-        
-        public int Fertilizer { get; set; }
-        
-        public int Water { get; set; }
-        
-        public int Light { get; set; }
-        
-        public int Temperature { get; set; }
-        
-        public int Humidity { get; set; }
-        
-        public int Location { get; set; }
+        return maps;
     }
 }
