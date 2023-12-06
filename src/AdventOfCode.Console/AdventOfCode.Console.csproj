@@ -38,6 +38,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Challenges\Day06\Input.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\AdventOfCode.Core\AdventOfCode.Core.csproj" />
     </ItemGroup>
 
