@@ -14,40 +14,76 @@ public class Day12 : Challenge<Day12>
     public Day12() : base()
     {
     }
-    
+
     public override int SolvePart1()
     {
         var arrangementCount = new List<int>();
+        var tasks = new List<Task>();
+        var lockObject = new object(); // Mutex for synchronisation
+        
         foreach (var line in _input)
         {
-            var parts = line.Split(" ");
-            var springs = parts[0];
-            var damagedGroups = parts[1].Split(',').Select(int.Parse).ToList();
+            string lineToParse = line;
+            
+            var task = Task.Run(() =>
+            {
+                Console.WriteLine($"Starting task {Task.CurrentId} for line {lineToParse}");
+                
+                var parts = lineToParse.Split(" ");
+                var springs = parts[0];
+                var damagedGroups = parts[1].Split(',').Select(int.Parse).ToList();
 
-            var options = GetAllOptions(springs);
+                var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
+                
+                lock (lockObject)
+                {
+                    arrangementCount.Add(possibleArrangementCount);
+                }
+                
+                Console.WriteLine($"Completed task {Task.CurrentId} for line {lineToParse}: {possibleArrangementCount}");
+            });
 
-            var viableOptionCount = GetValidOptionCount(options, damagedGroups);
-            arrangementCount.Add(viableOptionCount);
+            tasks.Add(task);
         }
-        
+
+        Task.WaitAll(tasks.ToArray());
+
         return arrangementCount.Sum();
     }
 
     public override int SolvePart2()
     {
         var arrangementCount = new List<int>();
+        var tasks = new List<Task>();
+        var lockObject = new object(); // Mutex for synchronisation
+        
         foreach (var line in _input)
         {
-            var parts = line.Split(" ");
-            var springs = Unfold(parts[0], '?');
-            var damagedGroups = Unfold(parts[1], ',').Split(',').Select(int.Parse).ToList();
+            string lineToParse = line;
+            
+            var task = Task.Run(() =>
+            {
+                Console.WriteLine($"Starting task {Task.CurrentId} for line {lineToParse}");
+                
+                var parts = lineToParse.Split(" ");
+                var springs = Unfold(parts[0], '?');
+                var damagedGroups = Unfold(parts[1], ',').Split(',').Select(int.Parse).ToList();
 
-            var options = GetAllOptions(springs);
+                var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
+                
+                lock (lockObject)
+                {
+                    arrangementCount.Add(possibleArrangementCount);
+                }
+                
+                Console.WriteLine($"Completed task {Task.CurrentId} for line {lineToParse}: {possibleArrangementCount}");
+            });
 
-            var viableOptionCount = GetValidOptionCount(options, damagedGroups);
-            arrangementCount.Add(viableOptionCount);
+            tasks.Add(task);
         }
-        
+
+        Task.WaitAll(tasks.ToArray());
+
         return arrangementCount.Sum();
     }
 
@@ -65,40 +101,21 @@ public class Day12 : Challenge<Day12>
 
         return unfoldedInput;
     }
-    
-    private int GetValidOptionCount(List<string> options, List<int> damagedGroups)
+
+    private int GetPossibleArrangementCount(string springs, List<int> damagedGroups)
     {
-        var viableOptionCount = 0;
-        foreach (var option in options)
-        {
-            var groups = option
-                .Split('.')
-                .Where(x => !string.IsNullOrEmpty(x))
-                .ToList()
-                .Select(x => x.Length);
-
-            if (groups.SequenceEqual(damagedGroups))
-            {
-                viableOptionCount += 1;
-            }
-        }
-
-        return viableOptionCount;
-    }
-
-    private List<string> GetAllOptions(string springs)
-    {
-        var options = new List<string>();
         var unknowns = springs.Count(c => c == '?');
-        var possibleOptions = Math.Pow(2, unknowns);
+        var possibleOptions = (int)Math.Pow(2, unknowns);
+        var possibleArrangementCount = 0;
         for (var i = 0; i < possibleOptions; i++)
         {
-            options.Add(GetOption(springs, i));
+            var option = GetOption(springs, i);
+            if (IsOptionValid(option, damagedGroups)) possibleArrangementCount++;
         }
 
-        return options;
+        return possibleArrangementCount;
     }
-    
+
     private string GetOption(string springs, int option)
     {
         var result = string.Empty;
@@ -114,6 +131,18 @@ public class Day12 : Challenge<Day12>
                 result += spring;
             }
         }
+
         return result;
+    }
+
+    private bool IsOptionValid(string option, List<int> damagedGroups)
+    {
+        var groups = option
+            .Split('.')
+            .Where(x => !string.IsNullOrEmpty(x))
+            .ToList()
+            .Select(x => x.Length);
+
+        return groups.SequenceEqual(damagedGroups);
     }
 }
