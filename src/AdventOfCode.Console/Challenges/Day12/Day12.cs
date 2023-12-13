@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Text;
 using AdventOfCode.Core;
 
 namespace AdventOfCode.Challenges;
@@ -15,38 +14,21 @@ public class Day12 : Challenge<Day12>
     {
     }
 
+
+    private static Dictionary<string, long> memo = new();
+
     public override int SolvePart1()
     {
         var arrangementCount = new List<int>();
-        var tasks = new List<Task>();
-        var lockObject = new object(); // Mutex for synchronisation
-        
         foreach (var line in _input)
         {
-            string lineToParse = line;
-            
-            var task = Task.Run(() =>
-            {
-                Console.WriteLine($"Starting task {Task.CurrentId} for line {lineToParse}");
-                
-                var parts = lineToParse.Split(" ");
-                var springs = parts[0];
-                var damagedGroups = parts[1].Split(',').Select(int.Parse).ToList();
+            var parts = line.Split(" ");
+            var springs = parts[0];
+            var damagedGroups = parts[1].Split(',').Select(int.Parse).ToList();
 
-                var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
-                
-                lock (lockObject)
-                {
-                    arrangementCount.Add(possibleArrangementCount);
-                }
-                
-                Console.WriteLine($"Completed task {Task.CurrentId} for line {lineToParse}: {possibleArrangementCount}");
-            });
-
-            tasks.Add(task);
+            var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
+            arrangementCount.Add(possibleArrangementCount);
         }
-
-        Task.WaitAll(tasks.ToArray());
 
         return arrangementCount.Sum();
     }
@@ -54,35 +36,15 @@ public class Day12 : Challenge<Day12>
     public override int SolvePart2()
     {
         var arrangementCount = new List<int>();
-        var tasks = new List<Task>();
-        var lockObject = new object(); // Mutex for synchronisation
-        
         foreach (var line in _input)
         {
-            string lineToParse = line;
-            
-            var task = Task.Run(() =>
-            {
-                Console.WriteLine($"Starting task {Task.CurrentId} for line {lineToParse}");
-                
-                var parts = lineToParse.Split(" ");
-                var springs = Unfold(parts[0], '?');
-                var damagedGroups = Unfold(parts[1], ',').Split(',').Select(int.Parse).ToList();
+            var parts = line.Split(" ");
+            var springs = Unfold(parts[0], '?');
+            var damagedGroups = Unfold(parts[1], ',').Split(',').Select(int.Parse).ToList();
 
-                var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
-                
-                lock (lockObject)
-                {
-                    arrangementCount.Add(possibleArrangementCount);
-                }
-                
-                Console.WriteLine($"Completed task {Task.CurrentId} for line {lineToParse}: {possibleArrangementCount}");
-            });
-
-            tasks.Add(task);
+            var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
+            arrangementCount.Add(possibleArrangementCount);
         }
-
-        Task.WaitAll(tasks.ToArray());
 
         return arrangementCount.Sum();
     }
@@ -106,12 +68,16 @@ public class Day12 : Challenge<Day12>
     {
         var unknowns = springs.Count(c => c == '?');
         var possibleOptions = (int)Math.Pow(2, unknowns);
+        if (memo.TryGetValue(springs, out var value)) return (int)value;
+
         var possibleArrangementCount = 0;
         for (var i = 0; i < possibleOptions; i++)
         {
             var option = GetOption(springs, i);
             if (IsOptionValid(option, damagedGroups)) possibleArrangementCount++;
         }
+
+        memo.Add(springs, possibleArrangementCount);
 
         return possibleArrangementCount;
     }

@@ -48,7 +48,7 @@ Console.WriteLine("--- Advent of Code 2023 ---");
 // day11.SolveDayPart2();
 
 var day12 = new Solver<Day12>(true);
-day12.SolveDayPart1();
+//day12.SolveDayPart1();
 day12.SolveDayPart2();
 
 // var day13 = new Solver<Day13>(true);
