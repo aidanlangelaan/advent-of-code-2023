@@ -6,7 +6,7 @@ He doesn't know anything about the missing machine parts; he's only visiting for
 
 Maybe you can help him with the analysis to speed things up?
 
-### Part 1
+## Part 1
 
 The researcher has collected a bunch of data and compiled the data into a single giant image (your puzzle input). The image includes empty space (.) and galaxies (#). For example:
 
@@ -107,7 +107,7 @@ In this example, after expanding the universe, the sum of the shortest path betw
 
 Expand the universe, then find the length of the shortest path between every pair of galaxies. What is the sum of these lengths?
 
-### Part 2
+## Part 2
 
 The galaxies are much older (and thus much farther apart) than the researcher initially estimated.
 

@@ -12,7 +12,7 @@ The next thing you notice is an Elf sitting on the floor across the station in w
 
 The Elf leads you over to the pile of colorful cards. There, you discover dozens of scratchcards, all with their opaque covering already scratched off. Picking one up, it looks like each card has two lists of numbers separated by a vertical bar (|): a list of winning numbers and then a list of numbers you have. You organize the information into a table (your puzzle input).
 
-### Part 1
+## Part 1
 
 As far as the Elf has been able to figure out, you have to figure out which of the numbers you have appear in the list of winning numbers. The first match makes the card worth one point and each match after the first doubles the point value of that card.
 
@@ -39,7 +39,7 @@ So, in this example, the Elf's pile of scratchcards is worth 13 points.
 
 Take a seat in the large pile of colorful cards. How many points are they worth in total?
 
-### Part 2
+## Part 2
 
 Just as you're about to report your findings to the Elf, one of you realizes that the rules have actually been printed on the back of every card this whole time.
 

@@ -1,23 +1,15 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 04")]
-public class Day04 : Challenge<Day04>
+public class Day04 : SolutionBase
 {
-    public Day04(string[] input) : base(input)
-    {
-    }
+    public override int Day => 04;
 
-    public Day04() : base()
-    {
-    }
-    
-    public override int SolvePart1()
+    public override object PartOne(string[] input)
     {
         var scores = new List<int>();
-        foreach (var card in _input)
+        foreach (var card in input)
         {
             var winCount = GetWinCount(card);
             
@@ -39,17 +31,17 @@ public class Day04 : Challenge<Day04>
         return scores.Sum();
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
         var cards = new Dictionary<int, int>();
-        for(var i = 0; i < _input.Length; i++)
+        for(var i = 0; i < input.Length; i++)
         {
             cards.Add(i, 1);
         }
         
-        for(var i = 0; i < _input.Length; i++)
+        for(var i = 0; i < input.Length; i++)
         {
-            var winCount = GetWinCount(_input[i]);
+            var winCount = GetWinCount(input[i]);
             for (var j = 0; j < cards[i]; j++)
             {
                 for(var k = winCount; k > 0; k--)
@@ -72,3 +64,4 @@ public class Day04 : Challenge<Day04>
         return ownNumbers.Count(num => winningNumbers.Contains(num));
     }
 }
+

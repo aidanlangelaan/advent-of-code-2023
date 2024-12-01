@@ -6,7 +6,7 @@ You've been doing this long enough to know that to restore snow operations, you 
 
 Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants one star. Good luck!
 
-### Part 1
+## Part 1
 
 You try to ask why they can't just use a weather machine ("not powerful enough") and where they're even sending you ("the sky") and why your map looks mostly blank ("you sure ask a lot of questions") and hang on did you just say the sky ("of course, where do you think snow comes from") when you realize that the Elves are already loading you into a trebuchet ("please hold still, we need to strap you in").
 
@@ -27,7 +27,7 @@ In this example, the calibration values of these four lines are 12, 38, 15, and 
 
 Consider your entire calibration document. What is the sum of all of the calibration values?
 
-### Part 2
+## Part 2
 
 Your calculation isn't quite right. It looks like some of the digits are actually spelled out with letters: one, two, three, four, five, six, seven, eight, and nine also count as valid "digits".
 

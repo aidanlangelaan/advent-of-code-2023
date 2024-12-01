@@ -8,7 +8,7 @@ You take the boat and find the gardener right where you were told he would be: m
 
 "I've been so busy making sure everyone here has food that I completely forgot to check why we stopped getting more sand! There's a ferry leaving soon that is headed over in that direction - it's much faster than your boat. Could you please go check it out?"
 
-### Part 1
+## Part 1
 
 You barely have time to agree to this request when he brings up another. "While you wait for the ferry, maybe you can help us with our food production problem. The latest Island Island Almanac just arrived and we're having trouble making sense of it."
 
@@ -111,7 +111,7 @@ So, the lowest location number in this example is 35.
 
 What is the lowest location number that corresponds to any of the initial seed numbers?
 
-### Part 2
+## Part 2
 
 Everyone will starve if you only plant such a small number of seeds. Re-reading the almanac, it looks like the seeds: line actually describes ranges of seed numbers.
 

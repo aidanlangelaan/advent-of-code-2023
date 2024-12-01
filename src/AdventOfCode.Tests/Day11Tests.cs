@@ -1,39 +1,50 @@
-using AdventOfCode.Challenges;
+﻿using AdventOfCode.Challenges;
+using NUnit.Framework;
 
 namespace AdventOfCode.Tests;
 
-public class Day11Tests
+[TestFixture]
+public class Day11Test
 {
     private Day11 _day11;
-    
+
+    private readonly string[] input =
+    [
+        "...#......",
+        ".......#..",
+        "#.........",
+        "..........",
+        "......#...",
+        ".#........",
+        ".........#",
+        "..........",
+        ".......#..",
+        "#...#.....",
+    ];
+
     [SetUp]
     public void Setup()
     {
-        var testInput = new[]
-        {
-            "put test values here",
-        };
-        
-        _day11 = new Day11(testInput);
+        _day11 = new Day11();
     }
 
     [Test]
-    public void Example_Part1_ShouldReturn123()
+    public void Example_Part1_ShouldReturn374()
     {
         // act
-        var result = _day11.SolvePart1();
+        var result = _day11.PartOne(input);
 
         // assert
-        Assert.That(result, Is.EqualTo(123));
+        Assert.That(result, Is.EqualTo(374));
     }
-    
+
     [Test]
-    public void Example_Part2_ShouldReturn123()
+    public void Example_Part2_ShouldReturn82000210()
     {
         // act
-        var result = _day11.SolvePart2();
+        var result = _day11.PartTwo(input);
 
         // assert
-        Assert.That(result, Is.EqualTo(123));
+        Assert.That(result, Is.EqualTo(82000210));
     }
 }

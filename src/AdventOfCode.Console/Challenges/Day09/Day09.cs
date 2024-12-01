@@ -1,35 +1,27 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 09")]
-public class Day09 : Challenge<Day09>
+public class Day09 : SolutionBase
 {
-    public Day09(string[] input) : base(input)
-    {
-    }
+    public override int Day => 09;
 
-    public Day09() : base()
+    public override object PartOne(string[] input)
     {
-    }
-
-    public override int SolvePart1()
-    {
-        var extrapolatedValues = ProcessInput();
+        var extrapolatedValues = ProcessInput(input);
         return extrapolatedValues.Sum();
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
-        var extrapolatedValues = ProcessInput(true);
+        var extrapolatedValues = ProcessInput(input, true);
         return extrapolatedValues.Sum();
     }
-
-    private List<int> ProcessInput(bool reverse = false)
+    
+    private List<int> ProcessInput(string[] input, bool reverse = false)
     {
         var extrapolatedValues = new List<int>();
-        foreach (var line in _input)
+        foreach (var line in input)
         {
             var history = line.Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
             var sequences = new List<List<int>>() { history };
@@ -62,3 +54,4 @@ public class Day09 : Challenge<Day09>
         return extrapolatedValues;
     }
 }
+

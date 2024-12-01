@@ -1,43 +1,32 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 11")]
-public class Day11 : Challenge<Day11>
+public class Day11 : SolutionBase
 {
-    public Day11(string[] input) : base(input)
-    {
-    }
+    public override int Day => 11;
 
-    public Day11() : base()
-    {
-    }
-
-    public override int SolvePart1()
+    public override object PartOne(string[] input)
     {
         var multiplier = 2;
         
-        var pathLengths = CalculateLengths(multiplier);
+        var pathLengths = CalculateLengths(multiplier, input);
 
-        Console.WriteLine(pathLengths.Sum(x => x));
-        return 0;
+        return pathLengths.Sum(x => x);
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
         var multiplier = 1_000_000;
         
-        var pathLengths = CalculateLengths(multiplier);
+        var pathLengths = CalculateLengths(multiplier, input);
         
-        Console.WriteLine(pathLengths.Sum(x => x));
-        return 0;
+        return pathLengths.Sum(x => x);
     }
     
-    
-    private List<long> CalculateLengths(int multiplier)
+    private List<long> CalculateLengths(int multiplier, string[] input)
     {
-        var grid = _input.Select(t => t.Select(x => x).ToList()).ToList();
+        var grid = input.Select(t => t.Select(x => x).ToList()).ToList();
 
         var galaxies = grid
             .SelectMany((row, i) => row.Select((cell, j) => new { i, j, cell }))
@@ -117,3 +106,4 @@ public class Day11 : Challenge<Day11>
         public int Y { get; set; } = Y;
     }
 }
+

@@ -1,20 +1,12 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 02")]
-public class Day02 : Challenge<Day02>
+public class Day02 : SolutionBase
 {
-    public Day02(string[] input) : base(input)
-    {
-    }
+    public override int Day => 02;
 
-    public Day02() : base()
-    {
-    }
-
-    public override int SolvePart1()
+    public override object PartOne(string[] input)
     {
         // only 12 red cubes, 13 green cubes, and 14 blue cubes
         Dictionary<string, int> cubes = new()
@@ -25,7 +17,7 @@ public class Day02 : Challenge<Day02>
         };
 
         var possibleGameIds = new List<int>();
-        foreach (var line in _input)
+        foreach (var line in input)
         {
             var parts = line.Split(":");
             var gameId = Convert.ToInt32(parts[0].Split(" ").Last());
@@ -39,6 +31,18 @@ public class Day02 : Challenge<Day02>
         return possibleGameIds.Sum();
     }
 
+    public override object PartTwo(string[] input)
+    {
+        var counts = new List<int>(); 
+        foreach (var line in input)
+        {
+            var parts = line.Split(":");
+            counts.Add(GetMinimalCubeCount(parts));
+        }
+        
+        return counts.Sum();
+    }
+    
     private bool CheckIfPossible(IReadOnlyList<string> parts, IReadOnlyDictionary<string, int> cubes)
     {
         var game = parts[1].Split(",");
@@ -56,18 +60,6 @@ public class Day02 : Challenge<Day02>
         }
 
         return true;
-    }
-
-    public override int SolvePart2()
-    {
-        var counts = new List<int>(); 
-        foreach (var line in _input)
-        {
-            var parts = line.Split(":");
-            counts.Add(GetMinimalCubeCount(parts));
-        }
-        
-        return counts.Sum();
     }
     
     private int GetMinimalCubeCount(IReadOnlyList<string> parts)

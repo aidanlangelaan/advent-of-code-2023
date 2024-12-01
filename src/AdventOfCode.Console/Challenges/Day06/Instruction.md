@@ -6,7 +6,7 @@ As you try to figure out what to do next, you notice a poster on a wall near the
 
 You manage to sign up as a competitor in the boat races just in time. The organizer explains that it's not really a traditional race - instead, you will get a fixed amount of time during which your boat has to travel as far as it can, and you win if your boat goes the farthest.
 
-### Part 1
+## Part 1
 
 As part of signing up, you get a sheet of paper (your puzzle input) that lists the time allowed for each race and also the best distance ever recorded in that race. To guarantee you win the grand prize, you need to make sure you go farther in each race than the current record holder.
 
@@ -48,7 +48,7 @@ To see how much margin of error you have, determine the number of ways you can b
 
 Determine the number of ways you could beat the record in each race. What do you get if you multiply these numbers together?
 
-### Part 2
+## Part 2
 
 As the race is about to start, you realize the piece of paper with race times and record distances you got earlier actually just has very bad kerning. There's really only one race - ignore the spaces between the numbers on each line.
 

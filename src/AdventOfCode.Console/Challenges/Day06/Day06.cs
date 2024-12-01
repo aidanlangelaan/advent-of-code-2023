@@ -1,22 +1,14 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 06")]
-public class Day06 : Challenge<Day06>
+public class Day06 : SolutionBase
 {
-    public Day06(string[] input) : base(input)
-    {
-    }
+    public override int Day => 06;
 
-    public Day06() : base()
+    public override object PartOne(string[] input)
     {
-    }
-
-    public override int SolvePart1()
-    {
-        var races = GetRaces(1).ToArray();
+        var races = GetRaces(1, input).ToArray();
 
         var winCount = ProcessRaces(races);
 
@@ -26,19 +18,17 @@ public class Day06 : Challenge<Day06>
             product *= winCount[i];
         }
 
-        Console.WriteLine(product);
-        return 0;
+        return product;
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
-        var races = GetRaces(2).ToArray();
+        var races = GetRaces(2, input).ToArray();
         var winCount = ProcessRaces(races);
-        
-        Console.WriteLine(winCount[0]);
-        return 0;
-    }
 
+        return winCount[0];
+    }
+    
     private List<long> ProcessRaces((long Time, long RecordDistance)[] races)
     {
         List<long> winCount = new();
@@ -66,23 +56,23 @@ public class Day06 : Challenge<Day06>
         return winCount;
     }
 
-    private IEnumerable<(long Time, long RecordDistance)> GetRaces(int part)
+    private IEnumerable<(long Time, long RecordDistance)> GetRaces(int part, string[] input)
     {
         var times = new List<long>();
         var distances = new List<long>();
         if (part == 1)
         {
-            times = _input[0].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x)).Select(long.Parse).ToList();
-            distances = _input[1].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x)).Select(long.Parse)
+            times = input[0].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x)).Select(long.Parse).ToList();
+            distances = input[1].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x)).Select(long.Parse)
                 .ToList();
         }
         else
         {
-            var time = _input[0].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x))
+            var time = input[0].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x))
                 .Aggregate("", (current, next) => $"{current}{next}");
             times.Add(long.Parse(time));
             
-            var distance = _input[1].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x))
+            var distance = input[1].Split(":")[1].Split(" ").Where(x => !string.IsNullOrEmpty(x))
                 .Aggregate("", (current, next) => $"{current}{next}");
             distances.Add(long.Parse(distance));
         }
@@ -90,3 +80,4 @@ public class Day06 : Challenge<Day06>
         return times.Select((t, i) => (Time: t, RecordDistance: distances[i])).ToList();
     }
 }
+

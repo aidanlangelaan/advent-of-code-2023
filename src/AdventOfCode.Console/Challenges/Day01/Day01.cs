@@ -1,24 +1,16 @@
-﻿using System.ComponentModel;
-using System.Text.RegularExpressions;
-using AdventOfCode.Core;
+﻿using System.Text.RegularExpressions;
+using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 01")]
-public class Day01 : Challenge<Day01>
+public class Day01 : SolutionBase
 {
-    public Day01(string[] Input) : base(Input)
-    {
-    }
+    public override int Day => 01;
 
-    public Day01() : base()
-    {
-    }
-
-    public override int SolvePart1()
+    public override object PartOne(string[] input)
     {
         var digits = new List<int>();
-        foreach (var line in _input)
+        foreach (var line in input)
         {
             var matches = line
                 .Where(char.IsDigit)
@@ -33,10 +25,10 @@ public class Day01 : Challenge<Day01>
         return digits.Sum();
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
         var digits = new List<int>();
-        foreach (var line in _input)
+        foreach (var line in input)
         {
             var parsed = parseLine(line);
             
@@ -48,7 +40,7 @@ public class Day01 : Challenge<Day01>
 
         return digits.Sum();
     }
-
+    
     private static List<string> parseLine(string line)
     {
         var nums = new Dictionary<string, string>()
@@ -86,3 +78,4 @@ public class Day01 : Challenge<Day01>
             .ToList();
     }
 }
+

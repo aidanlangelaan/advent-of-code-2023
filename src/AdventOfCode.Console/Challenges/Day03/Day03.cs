@@ -1,28 +1,20 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 03")]
-public class Day03 : Challenge<Day03>
+public class Day03 : SolutionBase
 {
-    public Day03(string[] input) : base(input)
-    {
-    }
+    public override int Day => 03;
 
-    public Day03() : base()
+    public override object PartOne(string[] input)
     {
-    }
-    
-    public override int SolvePart1()
-    {
-        var symbols = FindSymbols();
+        var symbols = FindSymbols(input);
         
         // for every symbol, get the adjacent numbers
         var foundParts = new List<int>();
         foreach (var symbol in symbols)
         {
-            var adjacentNumbers = GetAdjacentNumbers(symbol);
+            var adjacentNumbers = GetAdjacentNumbers(symbol, input);
             if (adjacentNumbers.Count == 0)
             {
                 continue;
@@ -36,15 +28,15 @@ public class Day03 : Challenge<Day03>
         return foundParts.Sum();
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
-        var symbols = FindSymbols('*');
+        var symbols = FindSymbols(input, '*');
 
         // for every symbol, check get its adjacent numbers
         var ratios = new List<int>();
         foreach (var symbol in symbols)
         {
-            var adjacentNumbers = GetAdjacentNumbers(symbol);
+            var adjacentNumbers = GetAdjacentNumbers(symbol, input);
             if (adjacentNumbers.Count == 0)
             {
                 continue;
@@ -61,18 +53,18 @@ public class Day03 : Challenge<Day03>
 
         return ratios.Sum();
     }
-
-    private List<(int x, int y, char symbol)> FindSymbols(char? filter = null)
+    
+    private List<(int x, int y, char symbol)> FindSymbols(string[] input, char? filter = null)
     {
         // get all symbols
         var symbols = new List<(int x, int y, char symbol)>();
-        foreach (var s in _input)
+        foreach (var s in input)
         {
             for (var i = 0; i < s.Length; i++)
             {
                 if (!char.IsNumber(s[i]) && s[i] != '.' && (filter == null || s[i] == filter))
                 {
-                    symbols.Add((i, Array.IndexOf(_input, s), s[i]));
+                    symbols.Add((i, Array.IndexOf(input, s), s[i]));
                 }
             }
         }
@@ -80,17 +72,17 @@ public class Day03 : Challenge<Day03>
         return symbols;
     }
 
-    private List<string> GetAdjacentNumbers((int x, int y, char symbol) symbol)
+    private List<string> GetAdjacentNumbers((int x, int y, char symbol) symbol, string[] input)
     {
         var adjacentNumbers = new List<string>();
 
         // check top left
         if (symbol is { y: > 0, x: > 0 })
         {
-            var topLeft = _input[symbol.y - 1][symbol.x - 1];
+            var topLeft = input[symbol.y - 1][symbol.x - 1];
             if (char.IsNumber(topLeft))
             {
-                var foundNumber = GetNumber(_input[symbol.y - 1], symbol.x - 1);
+                var foundNumber = GetNumber(input[symbol.y - 1], symbol.x - 1);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -101,10 +93,10 @@ public class Day03 : Challenge<Day03>
         // check top
         if (symbol.y > 0)
         {
-            var top = _input[symbol.y - 1][symbol.x];
+            var top = input[symbol.y - 1][symbol.x];
             if (char.IsNumber(top))
             {
-                var foundNumber = GetNumber(_input[symbol.y - 1], symbol.x);
+                var foundNumber = GetNumber(input[symbol.y - 1], symbol.x);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -113,12 +105,12 @@ public class Day03 : Challenge<Day03>
         }
 
         // check top right
-        if (symbol.y > 0 && symbol.x < _input[symbol.y - 1].Length - 1)
+        if (symbol.y > 0 && symbol.x < input[symbol.y - 1].Length - 1)
         {
-            var topRight = _input[symbol.y - 1][symbol.x + 1];
+            var topRight = input[symbol.y - 1][symbol.x + 1];
             if (char.IsNumber(topRight))
             {
-                var foundNumber = GetNumber(_input[symbol.y - 1], symbol.x + 1);
+                var foundNumber = GetNumber(input[symbol.y - 1], symbol.x + 1);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -129,10 +121,10 @@ public class Day03 : Challenge<Day03>
         // check left
         if (symbol.x > 0)
         {
-            var left = _input[symbol.y][symbol.x - 1];
+            var left = input[symbol.y][symbol.x - 1];
             if (char.IsNumber(left))
             {
-                var foundNumber = GetNumber(_input[symbol.y], symbol.x - 1);
+                var foundNumber = GetNumber(input[symbol.y], symbol.x - 1);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -141,12 +133,12 @@ public class Day03 : Challenge<Day03>
         }
 
         // check right
-        if (symbol.x < _input[symbol.y].Length - 1)
+        if (symbol.x < input[symbol.y].Length - 1)
         {
-            var right = _input[symbol.y][symbol.x + 1];
+            var right = input[symbol.y][symbol.x + 1];
             if (char.IsNumber(right))
             {
-                var foundNumber = GetNumber(_input[symbol.y], symbol.x + 1);
+                var foundNumber = GetNumber(input[symbol.y], symbol.x + 1);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -155,12 +147,12 @@ public class Day03 : Challenge<Day03>
         }
 
         // check bottom left
-        if (symbol.y < _input.Length - 1 && symbol.x > 0)
+        if (symbol.y < input.Length - 1 && symbol.x > 0)
         {
-            var bottomLeft = _input[symbol.y + 1][symbol.x - 1];
+            var bottomLeft = input[symbol.y + 1][symbol.x - 1];
             if (char.IsNumber(bottomLeft))
             {
-                var foundNumber = GetNumber(_input[symbol.y + 1], symbol.x - 1);
+                var foundNumber = GetNumber(input[symbol.y + 1], symbol.x - 1);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -169,12 +161,12 @@ public class Day03 : Challenge<Day03>
         }
 
         // check bottom
-        if (symbol.y < _input.Length - 1)
+        if (symbol.y < input.Length - 1)
         {
-            var bottom = _input[symbol.y + 1][symbol.x];
+            var bottom = input[symbol.y + 1][symbol.x];
             if (char.IsNumber(bottom))
             {
-                var foundNumber = GetNumber(_input[symbol.y + 1], symbol.x);
+                var foundNumber = GetNumber(input[symbol.y + 1], symbol.x);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -183,12 +175,12 @@ public class Day03 : Challenge<Day03>
         }
 
         // check bottom right
-        if (symbol.y < _input.Length - 1 && symbol.x < _input[symbol.y + 1].Length - 1)
+        if (symbol.y < input.Length - 1 && symbol.x < input[symbol.y + 1].Length - 1)
         {
-            var bottomRight = _input[symbol.y + 1][symbol.x + 1];
+            var bottomRight = input[symbol.y + 1][symbol.x + 1];
             if (char.IsNumber(bottomRight))
             {
-                var foundNumber = GetNumber(_input[symbol.y + 1], symbol.x + 1);
+                var foundNumber = GetNumber(input[symbol.y + 1], symbol.x + 1);
                 if (!adjacentNumbers.Contains(foundNumber))
                 {
                     adjacentNumbers.Add(foundNumber);
@@ -236,3 +228,4 @@ public class Day03 : Challenge<Day03>
             .Aggregate("", (current, next) => $"{current}{next}");
     }
 }
+

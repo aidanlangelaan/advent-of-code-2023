@@ -1,27 +1,19 @@
-using System.ComponentModel;
-using System.Text.RegularExpressions;
-using AdventOfCode.Core;
+﻿using System.Text.RegularExpressions;
+using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 08")]
-public class Day08 : Challenge<Day08>
+public class Day08 : SolutionBase
 {
-    public Day08(string[] input) : base(input)
-    {
-    }
+    public override int Day => 08;
 
-    public Day08() : base()
-    {
-    }
-
-    public override int SolvePart1()
+    public override object PartOne(string[] input)
     {
         // parse directions
-        var directions = _input[0].ToArray();
+        var directions = input[0].ToArray();
 
         // parse nodes
-        var nodes = ParseNodes();
+        var nodes = ParseNodes(input);
 
         // loop through directions and count how many steps are needed to go from name AAA to name ZZZ
         var steps = 0;
@@ -45,13 +37,13 @@ public class Day08 : Challenge<Day08>
         return steps;
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
         // parse directions
-        var directions = _input[0].ToArray();
+        var directions = input[0].ToArray();
         
         // parse nodes
-        var nodes = ParseNodes();
+        var nodes = ParseNodes(input);
         
         // get all indexes of nodes where name ends in A
         var startNodes = nodes
@@ -89,17 +81,16 @@ public class Day08 : Challenge<Day08>
         {
             lcm = LeastCommonMultiple(lcm, nodeSteps[i]);
         }
-        
-        Console.WriteLine(lcm);
-        return 0;
-    }
 
-    private Dictionary<string, Node> ParseNodes()
+        return lcm;
+    }
+    
+    private Dictionary<string, Node> ParseNodes(string[] input)
     {
         var nodes = new List<Node>();
-        for (var i = 2; i < _input.Length; i++)
+        for (var i = 2; i < input.Length; i++)
         {
-            var values = Regex.Replace(_input[i], @"[\s()=,]", ",")
+            var values = Regex.Replace(input[i], @"[\s()=,]", ",")
                 .Split(",")
                 .Where(x => !string.IsNullOrEmpty(x)).ToArray();
             nodes.Add(new Node(values[0], values[1], values[2]));
@@ -133,3 +124,4 @@ public class Day08 : Challenge<Day08>
         public string Right { get; } = right;
     }
 }
+

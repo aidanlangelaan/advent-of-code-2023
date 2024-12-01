@@ -1,22 +1,14 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 10")]
-public class Day10 : Challenge<Day10>
+public class Day10 : SolutionBase
 {
-    public Day10(string[] input) : base(input)
-    {
-    }
+    public override int Day => 10;
 
-    public Day10() : base()
+    public override object PartOne(string[] input)
     {
-    }
-
-    public override int SolvePart1()
-    {
-        var grid = GetGrid();
+        var grid = GetGrid(input);
 
         var startPoint = grid
             .SelectMany((row, i) => row.Select((cell, j) => new { i, j, cell }))
@@ -29,9 +21,9 @@ public class Day10 : Challenge<Day10>
         return path.Count / 2;
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
-        var grid = GetGrid();
+        var grid = GetGrid(input);
 
         var startPoint = grid
             .SelectMany((row, i) => row.Select((cell, j) => new { i, j, cell }))
@@ -58,7 +50,7 @@ public class Day10 : Challenge<Day10>
 
         return enclosed;
     }
-
+    
     private List<(int X, int Y)> GetPath(List<List<char>> grid, (int X, int Y) startPoint)
     {
         var startDirection = GetNextDirection(grid, startPoint.X, startPoint.Y, -1, -1);
@@ -90,9 +82,9 @@ public class Day10 : Challenge<Day10>
         return path;
     }
 
-    private List<List<char>> GetGrid()
+    private List<List<char>> GetGrid(string[] input)
     {
-        var grid = _input.Select(t => t.Select(x => x).ToList()).ToList();
+        var grid = input.Select(t => t.Select(x => x).ToList()).ToList();
 
         // Fill with extra line around grid to prevent out of bounds
         for (var i = 0; i < grid.Count; i++)
@@ -243,3 +235,4 @@ public class Day10 : Challenge<Day10>
         return result;
     }
 }
+

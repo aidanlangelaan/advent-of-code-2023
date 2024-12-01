@@ -4,7 +4,7 @@ You're still riding a camel across Desert Island when you spot a sandstorm quick
 
 One of the camel's pouches is labeled "maps" - sure enough, it's full of documents (your puzzle input) about how to navigate the desert. At least, you're pretty sure that's what they are; one of the documents contains a list of left/right instructions, and the rest of the documents seem to describe some kind of network of labeled nodes.
 
-### Part 1
+## Part 1
 
 It seems like you're meant to use the left/right instructions to navigate the network. Perhaps if you have the camel follow the same instructions, you can escape the haunted wasteland!
 
@@ -38,7 +38,7 @@ ZZZ = (ZZZ, ZZZ)
 
 Starting at AAA, follow the left/right instructions. How many steps are required to reach ZZZ?
 
-### Part 2
+## Part 2
 
 The sandstorm is upon you and you aren't any closer to escaping the wasteland. You had the camel follow the instructions, but you've barely left your starting position. It's going to take significantly more steps to escape!
 

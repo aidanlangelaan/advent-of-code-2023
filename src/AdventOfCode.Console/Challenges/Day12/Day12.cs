@@ -1,114 +1,90 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 12")]
-public class Day12 : Challenge<Day12>
+public class Day12 : SolutionBase
 {
-    public Day12(string[] input) : base(input)
+    public override int Day => 12;
+
+    private static Dictionary<(string springs, string damagedGroups), long> cache = new();
+
+    public override object PartOne(string[] input)
     {
-    }
+        long total = 0;
 
-    public Day12() : base()
-    {
-    }
-
-
-    private static Dictionary<string, long> memo = new();
-
-    public override int SolvePart1()
-    {
-        var arrangementCount = new List<int>();
-        foreach (var line in _input)
+        foreach (var line in input)
         {
-            var parts = line.Split(" ");
+            var parts = line.Split(' ');
             var springs = parts[0];
-            var damagedGroups = parts[1].Split(',').Select(int.Parse).ToList();
+            var damagedGroups = string.Join(',', parts[1].Split(',').Select(int.Parse));
 
-            var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
-            arrangementCount.Add(possibleArrangementCount);
+            total += Count(springs, damagedGroups);
         }
 
-        return arrangementCount.Sum();
+        return total;
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
-        var arrangementCount = new List<int>();
-        foreach (var line in _input)
-        {
-            var parts = line.Split(" ");
-            var springs = Unfold(parts[0], '?');
-            var damagedGroups = Unfold(parts[1], ',').Split(',').Select(int.Parse).ToList();
+        long total = 0;
 
-            var possibleArrangementCount = GetPossibleArrangementCount(springs, damagedGroups);
-            arrangementCount.Add(possibleArrangementCount);
+        foreach (var line in input)
+        {
+            var parts = line.Split(' ');
+            var springs = string.Join('?', Enumerable.Repeat(parts[0], 5));
+            var damagedGroups = string.Join(',', Enumerable.Repeat(parts[1], 5));
+
+            total += Count(springs, damagedGroups);
         }
 
-        return arrangementCount.Sum();
+        return total;
     }
 
-    private string Unfold(string input, char separator)
+    private long Count(string springs, string damagedGroups)
     {
-        var unfoldedInput = string.Empty;
-        for (var i = 0; i < 5; i++)
+        if (string.IsNullOrEmpty(springs))
         {
-            unfoldedInput += input;
-            if (i < 4)
+            return damagedGroups == "" ? 1 : 0;
+        }
+
+        if (string.IsNullOrEmpty(damagedGroups))
+        {
+            return springs.Contains('#') ? 0 : 1;
+        }
+
+        var key = (springs: springs, damagedGroups: damagedGroups);
+
+        if (cache.TryGetValue(key, out var cachedResult))
+        {
+            return cachedResult;
+        }
+
+        long result = 0;
+
+        var currentDamagedGroups = damagedGroups.Split(',', 2);
+        var currentGroupSize = int.Parse(currentDamagedGroups[0]);
+        var remainingDamagedGroups = currentDamagedGroups.Length > 1 ? currentDamagedGroups[1] : "";
+
+        // Try leaving the current position empty
+        if (springs[0] == '.' || springs[0] == '?')
+        {
+            result += Count(springs[1..], damagedGroups);
+        }
+
+        // Try placing the current group at the current position
+        if (springs[0] == '#' || springs[0] == '?')
+        {
+            if (currentGroupSize <= springs.Length &&
+                !springs[..currentGroupSize].Contains('.') &&
+                (currentGroupSize == springs.Length || springs[currentGroupSize] != '#'))
             {
-                unfoldedInput += separator;
+                // Ensure that we only slice if (currentGroupSize + 1) is within bounds
+                var nextSprings = currentGroupSize + 1 < springs.Length ? springs[(currentGroupSize + 1)..] : "";
+                result += Count(nextSprings, remainingDamagedGroups);
             }
         }
 
-        return unfoldedInput;
-    }
-
-    private int GetPossibleArrangementCount(string springs, List<int> damagedGroups)
-    {
-        var unknowns = springs.Count(c => c == '?');
-        var possibleOptions = (int)Math.Pow(2, unknowns);
-        if (memo.TryGetValue(springs, out var value)) return (int)value;
-
-        var possibleArrangementCount = 0;
-        for (var i = 0; i < possibleOptions; i++)
-        {
-            var option = GetOption(springs, i);
-            if (IsOptionValid(option, damagedGroups)) possibleArrangementCount++;
-        }
-
-        memo.Add(springs, possibleArrangementCount);
-
-        return possibleArrangementCount;
-    }
-
-    private string GetOption(string springs, int option)
-    {
-        var result = string.Empty;
-        foreach (var spring in springs)
-        {
-            if (spring == '?')
-            {
-                result += option % 2 == 1 ? '#' : '.';
-                option >>= 1;
-            }
-            else
-            {
-                result += spring;
-            }
-        }
-
+        cache[key] = result;
         return result;
-    }
-
-    private bool IsOptionValid(string option, List<int> damagedGroups)
-    {
-        var groups = option
-            .Split('.')
-            .Where(x => !string.IsNullOrEmpty(x))
-            .ToList()
-            .Select(x => x.Length);
-
-        return groups.SequenceEqual(damagedGroups);
     }
 }

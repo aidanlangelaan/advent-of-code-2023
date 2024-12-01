@@ -1,23 +1,16 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Attributes;
+using AdventOfCode.Core.Classes;
 using AdventOfCode.Core.Extensions;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 05")]
-public class Day05 : Challenge<Day05>
+public class Day05 : SolutionBase
 {
-    public Day05(string[] input) : base(input)
-    {
-    }
+    public override int Day => 05;
 
-    public Day05() : base()
+    public override object PartOne(string[] input)
     {
-    }
-
-    public override int SolvePart1()
-    {
-        var seedValues = _input[0]
+        var seedValues = input[0]
             .Split(":")[1]
             .Split(" ", StringSplitOptions.RemoveEmptyEntries)
             .Select(long.Parse).ToList();
@@ -28,23 +21,23 @@ public class Day05 : Challenge<Day05>
             seedRanges.Add((value, value));
         }
 
-        var mappings = ParseMaps();
+        var mappings = ParseMaps(input);
 
         var result = ProcessSeeds(seedRanges, mappings);
 
-        Console.WriteLine(result);
-        return 0;
+        return result;
     }
 
-    public override int SolvePart2()
+    [ExcludePartFromRun(2)]
+    public override object PartTwo(string[] input)
     {
         // get seed values
-        var seedValues = _input[0]
+        var seedValues = input[0]
             .Split(":")[1]
             .Split(" ", StringSplitOptions.RemoveEmptyEntries)
             .Select(long.Parse).ToList();
 
-        var mappings = ParseMaps();
+        var mappings = ParseMaps(input);
 
         var seedRanges = new List<(long From, long To)>();
         for (var i = 0; i < seedValues.Count; i += 2)
@@ -56,10 +49,9 @@ public class Day05 : Challenge<Day05>
         
         var result = ProcessSeeds(mergedRanges, mappings);
 
-        Console.WriteLine(result);
-        return 0;
+        return result;
     }
-
+    
     private static List<(long From, long To)> MergeOverlappingRanges(List<(long From, long To)> seedRanges)
     {
         var mergedRanges = new List<(long From, long To)>();
@@ -141,27 +133,27 @@ public class Day05 : Challenge<Day05>
         return updatedRanges;
     }
 
-    private List<List<long[]>> ParseMaps()
+    private List<List<long[]>> ParseMaps(string[] input)
     {
         // find index of where sections of the input start
-        var seedToSoilMapIndex = _input.WithIndex().First(x => x.item.Contains("seed-to-soil map")).index + 1;
-        var soilToFertMapIndex = _input.WithIndex().First(x => x.item.Contains("soil-to-fertilizer map")).index + 1;
-        var fertToWaterMapIndex = _input.WithIndex().First(x => x.item.Contains("fertilizer-to-water map")).index + 1;
-        var waterToLightMapIndex = _input.WithIndex().First(x => x.item.Contains("water-to-light map")).index + 1;
-        var lightToTempMapIndex = _input.WithIndex().First(x => x.item.Contains("light-to-temperature map")).index + 1;
-        var tempToHumMapIndex = _input.WithIndex().First(x => x.item.Contains("temperature-to-humidity map")).index + 1;
-        var humToLocMapIndex = _input.WithIndex().First(x => x.item.Contains("humidity-to-location map")).index + 1;
+        var seedToSoilMapIndex = input.WithIndex().First(x => x.item.Contains("seed-to-soil map")).index + 1;
+        var soilToFertMapIndex = input.WithIndex().First(x => x.item.Contains("soil-to-fertilizer map")).index + 1;
+        var fertToWaterMapIndex = input.WithIndex().First(x => x.item.Contains("fertilizer-to-water map")).index + 1;
+        var waterToLightMapIndex = input.WithIndex().First(x => x.item.Contains("water-to-light map")).index + 1;
+        var lightToTempMapIndex = input.WithIndex().First(x => x.item.Contains("light-to-temperature map")).index + 1;
+        var tempToHumMapIndex = input.WithIndex().First(x => x.item.Contains("temperature-to-humidity map")).index + 1;
+        var humToLocMapIndex = input.WithIndex().First(x => x.item.Contains("humidity-to-location map")).index + 1;
 
         // parse maps
         return new List<List<long[]>>
         {
-            ProcessMapAtIndex(_input, seedToSoilMapIndex),
-            ProcessMapAtIndex(_input, soilToFertMapIndex),
-            ProcessMapAtIndex(_input, fertToWaterMapIndex),
-            ProcessMapAtIndex(_input, waterToLightMapIndex),
-            ProcessMapAtIndex(_input, lightToTempMapIndex),
-            ProcessMapAtIndex(_input, tempToHumMapIndex),
-            ProcessMapAtIndex(_input, humToLocMapIndex)
+            ProcessMapAtIndex(input, seedToSoilMapIndex),
+            ProcessMapAtIndex(input, soilToFertMapIndex),
+            ProcessMapAtIndex(input, fertToWaterMapIndex),
+            ProcessMapAtIndex(input, waterToLightMapIndex),
+            ProcessMapAtIndex(input, lightToTempMapIndex),
+            ProcessMapAtIndex(input, tempToHumMapIndex),
+            ProcessMapAtIndex(input, humToLocMapIndex)
         };
     }
 
@@ -188,3 +180,4 @@ public class Day05 : Challenge<Day05>
         return maps;
     }
 }
+

@@ -14,7 +14,7 @@ After riding a bit across the sands of Desert Island, you can see what look like
 
 You've already assumed it'll be your job to figure out why the parts stopped when she asks if you can help. You agree automatically.
 
-### Part 1
+## Part 1
 
 Because the journey will take a few days, she offers to teach you the game of Camel Cards. Camel Cards is sort of similar to poker except it's designed to be easier to play while riding a camel.
 
@@ -58,7 +58,7 @@ Now, you can determine the total winnings of this set of hands by adding up the 
 
 Find the rank of every hand in your set. What are the total winnings?
 
-### Part 2
+## Part 2
 
 To make things a little more interesting, the Elf introduces one additional rule. Now, J cards are jokers - wildcards that can act like whatever card would make the hand the strongest type possible.
 

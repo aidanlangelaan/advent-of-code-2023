@@ -1,43 +1,33 @@
-using System.ComponentModel;
-using AdventOfCode.Core;
+﻿using AdventOfCode.Core.Classes;
 
 namespace AdventOfCode.Challenges;
 
-[Description("Day 07")]
-public class Day07 : Challenge<Day07>
+public class Day07 : SolutionBase
 {
-    public Day07(string[] input) : base(input)
-    {
-    }
+    public override int Day => 07;
 
-    public Day07() : base()
+    public override object PartOne(string[] input)
     {
-    }
-
-    public override int SolvePart1()
-    {
-        var groupedHands = GetGroupedHands();
+        var groupedHands = GetGroupedHands(input);
 
         DetermineRanks(groupedHands);
 
-        Console.WriteLine(groupedHands.Values.SelectMany(x => x).Sum(x => x.WinAmount));
-        return 0;
+        return groupedHands.Values.SelectMany(x => x).Sum(x => x.WinAmount);
     }
 
-    public override int SolvePart2()
+    public override object PartTwo(string[] input)
     {
-        var groupedHands = GetGroupedHands(true);
+        var groupedHands = GetGroupedHands(input, true);
 
         DetermineRanks(groupedHands);
 
-        Console.WriteLine(groupedHands.Values.SelectMany(x => x).Sum(x => x.WinAmount));
-        return 0;
+        return groupedHands.Values.SelectMany(x => x).Sum(x => x.WinAmount);
     }
-
-    private Dictionary<HandType, List<Hand>> GetGroupedHands(bool useJoker = false)
+    
+    private Dictionary<HandType, List<Hand>> GetGroupedHands(string[] input, bool useJoker = false)
     {
         // parse all hands
-        var hands = _input
+        var hands = input
             .Select(line => line.Trim().Split(" "))
             .Select(set => new Hand(set[0], long.Parse(set[1]), useJoker))
             .OrderByDescending(x => x.HandType)
@@ -93,7 +83,7 @@ public class Day07 : Challenge<Day07>
                 .ToList();
 
             var jokerCount = 0;
-            if (useJoker && cards.Contains('J'))
+            if (useJoker && Cards.Contains('J'))
             {
                 jokerCount = labelCounts.First(x => x.Key == 'J').Count;
                 labelCounts.Remove(labelCounts.First(x => x.Key == 'J'));
@@ -193,3 +183,4 @@ public class Day07 : Challenge<Day07>
         HighCard = 7
     }
 }
+

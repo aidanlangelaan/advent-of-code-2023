@@ -8,7 +8,7 @@ It doesn't take long to find the gondolas, but there seems to be a problem: they
 
 You turn around to see a slightly-greasy Elf with a wrench and a look of surprise. "Sorry, I wasn't expecting anyone! The gondola lift isn't working right now; it'll still be a while before I can fix it." You offer to help.
 
-### Part 1
+## Part 1
 
 The engineer explains that an engine part seems to be missing from the engine, but nobody can figure out which one. If you can add up all the part numbers in the engine schematic, it should be easy to work out which part is missing.
 
@@ -33,7 +33,7 @@ In this schematic, two numbers are not part numbers because they are not adjacen
 
 Of course, the actual engine schematic is much larger. What is the sum of all of the part numbers in the engine schematic?
 
-### Part 2
+## Part 2
 
 The engineer finds the missing part and installs it in the engine! As the engine springs to life, you jump in the closest gondola, finally ready to ascend to the water source.
 
